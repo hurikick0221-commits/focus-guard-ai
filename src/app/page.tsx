@@ -18,7 +18,7 @@ export default function Home() {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const { status, isRunning, incrementFocusTime, tickAwayTime, currentTab } = usePoseStore();
+  const { status, isRunning, incrementFocusTime, tickAwayTime, currentTab, setInstallPrompt } = usePoseStore();
   usePoseDetection(videoRef.current);
 
   useEffect(() => {
@@ -43,12 +43,25 @@ export default function Home() {
   }, [incrementFocusTime, tickAwayTime]);
 
   useEffect(() => {
+    // PWA 설치 프롬프트 구독
+    const handlePwaReady = (e: Event) => {
+      // Prevent the mini-infobar from appearing on mobile
+      e.preventDefault();
+      // Stash the event so it can be triggered later.
+      setInstallPrompt(e);
+    };
+
+    window.addEventListener('pwa-install-ready', handlePwaReady);
+
     if (isRunning) {
       intervalRef.current = setInterval(tick, 1000);
     } else {
       if (intervalRef.current) clearInterval(intervalRef.current);
     }
-    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      window.removeEventListener('pwa-install-ready', handlePwaReady);
+    };
   }, [isRunning, tick]);
   const formatTime = (s: number) => {
     const h = String(Math.floor(s / 3600)).padStart(2, '0');

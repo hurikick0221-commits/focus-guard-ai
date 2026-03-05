@@ -69,6 +69,11 @@ interface PoseState {
     resetCurrentAwayTime: () => void;
     logActivity: (type: 'turtle' | 'away' | 'return') => void;
 
+    // PWA 관련 액션
+    installPrompt: any;
+    setInstallPrompt: (prompt: any) => void;
+    triggerInstall: () => void;
+
     // 데이터 초기화 액션
     resetStats: () => void;
     resetHistory: () => void;
@@ -104,6 +109,7 @@ export const usePoseStore = create<PoseState>((set, get) => ({
     activities: [],
     isRunning: false,
     currentTab: 'dashboard',
+    installPrompt: null,
 
     setStatus: (status) => set({ status }),
     setSensitivity: (sensitivity) => set({ sensitivity }),
@@ -112,6 +118,18 @@ export const usePoseStore = create<PoseState>((set, get) => ({
     setPostureScore: (postureScore) => set({ postureScore }),
     toggleVideo: () => set((state) => ({ showVideo: !state.showVideo })),
     setCurrentTab: (tab) => set({ currentTab: tab }),
+
+    setInstallPrompt: (prompt) => set({ installPrompt: prompt }),
+    triggerInstall: async () => {
+        const prompt = get().installPrompt;
+        if (prompt) {
+            prompt.prompt();
+            const { outcome } = await prompt.userChoice;
+            if (outcome === 'accepted') {
+                set({ installPrompt: null });
+            }
+        }
+    },
 
     calibrate: () => set((state) => ({ calibrationNeckRatio: state.neckRatio })),
     reset: () => set({

@@ -4,12 +4,41 @@ import React from 'react';
 import { usePoseStore, Sensitivity } from '../../store/usePoseStore';
 
 export const SettingsTab: React.FC = () => {
-    const { sensitivity, setSensitivity, showVideo, toggleVideo, resetStats, resetHistory } = usePoseStore();
+    const {
+        sensitivity, setSensitivity,
+        showVideo, toggleVideo,
+        resetStats, resetHistory,
+        triggerInstall, installPrompt
+    } = usePoseStore();
 
     return (
         <div className="flex-1 overflow-y-auto pb-20 fade-in duration-300">
             <div className="px-4 pt-6 pb-4">
                 <h2 className="text-2xl font-bold mb-6">설정</h2>
+
+                {/* 앱 설치 유도 섹션 (설치 안 된 경우만 표시) */}
+                {installPrompt && (
+                    <div className="mb-6 bg-[#0d59f2]/10 border border-[#0d59f2]/20 rounded-2xl p-5 fade-in">
+                        <div className="flex items-start gap-4">
+                            <div className="bg-[#0d59f2] p-3 rounded-xl shadow-lg shadow-[#0d59f2]/30">
+                                <span className="material-symbols-outlined text-white text-2xl">install_mobile</span>
+                            </div>
+                            <div className="flex-1">
+                                <h3 className="font-bold text-lg mb-1">앱으로 설치하기</h3>
+                                <p className="text-sm text-slate-400 leading-relaxed mb-4">
+                                    홈 화면에 추가하면 브라우저 없이 더 빠르고 쾌적하게 FocusGuard를 이용할 수 있습니다.
+                                </p>
+                                <button
+                                    onClick={triggerInstall}
+                                    className="w-full bg-[#0d59f2] hover:bg-[#0d59f2]/90 text-white font-bold py-3 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-2"
+                                >
+                                    <span>지금 바로 설치</span>
+                                    <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 <div className="bg-slate-800/40 rounded-xl border border-slate-800 overflow-hidden divide-y divide-slate-800/50">
 
