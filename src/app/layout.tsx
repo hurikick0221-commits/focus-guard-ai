@@ -9,8 +9,15 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "FocusGuard AI - 거북목 방지 시스템",
-  description: "수석 엔지니어가 설계한 고정밀 거북목 방지 대시보드",
+  title: "FocusGuard AI",
+  description: "AI-powered posture monitoring and focus tracking",
+  manifest: "/manifest.json",
+  themeColor: "#0f172a",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "FocusGuard AI",
+  },
 };
 
 export default function RootLayout({
