@@ -16,8 +16,8 @@ export const SettingsTab: React.FC = () => {
             <div className="px-4 pt-6 pb-4">
                 <h2 className="text-2xl font-bold mb-6">설정</h2>
 
-                {/* 앱 설치 유도 섹션 (설치 안 된 경우만 표시) */}
-                {installPrompt && (
+                {/* 앱 설치 유도 섹션 */}
+                {installPrompt ? (
                     <div className="mb-6 bg-[#0d59f2]/10 border border-[#0d59f2]/20 rounded-2xl p-5 fade-in">
                         <div className="flex items-start gap-4">
                             <div className="bg-[#0d59f2] p-3 rounded-xl shadow-lg shadow-[#0d59f2]/30">
@@ -35,6 +35,21 @@ export const SettingsTab: React.FC = () => {
                                     <span>지금 바로 설치</span>
                                     <span className="material-symbols-outlined text-sm">arrow_forward</span>
                                 </button>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    /* 프롬프트가 없는 경우 (iOS 또는 이미 설치됨) 안내 메시지 표시 */
+                    <div className="mb-6 bg-slate-800/20 border border-slate-800 rounded-2xl p-5">
+                        <div className="flex items-start gap-4">
+                            <div className="bg-slate-700 p-3 rounded-xl">
+                                <span className="material-symbols-outlined text-slate-300 text-2xl">info</span>
+                            </div>
+                            <div className="flex-1">
+                                <h3 className="font-bold text-lg mb-1 text-slate-200">간편하게 설치하는 법</h3>
+                                <p className="text-sm text-slate-400 leading-relaxed">
+                                    브라우저 메뉴에서 <span className="text-[#0d59f2] font-semibold">"홈 화면에 추가"</span>를 눌러보세요! 바탕화면에 진짜 앱처럼 아이콘이 생깁니다.
+                                </p>
                             </div>
                         </div>
                     </div>
