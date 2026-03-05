@@ -27,6 +27,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
+      <head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+      </head>
       <body className={`${spaceGrotesk.variable} antialiased bg-slate-950 flex justify-center min-h-screen`}>
         <div className="w-full max-w-[390px] relative bg-[#101622] shadow-2xl shadow-black/50">
           {children}
