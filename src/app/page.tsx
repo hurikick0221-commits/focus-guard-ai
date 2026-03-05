@@ -44,12 +44,15 @@ export default function Home() {
 
   useEffect(() => {
     // PWA 설치 프롬프트 구독
-    const handlePwaReady = (e: Event) => {
-      // Prevent the mini-infobar from appearing on mobile
-      e.preventDefault();
-      // Stash the event so it can be triggered later.
-      setInstallPrompt(e);
+    const handlePwaReady = () => {
+      const prompt = (window as any).deferredPrompt;
+      setInstallPrompt(prompt);
     };
+
+    // 이미 이벤트가 발생했을 수 있으므로 체크
+    if ((window as any).deferredPrompt) {
+      handlePwaReady();
+    }
 
     window.addEventListener('pwa-install-ready', handlePwaReady);
 
@@ -103,7 +106,48 @@ export default function Home() {
             {currentTab === 'dashboard' && <DashboardTab />}
             {currentTab === 'stats' && <StatsTab />}
             {currentTab === 'history' && <HistoryTab />}
-            {currentTab === 'settings' && <SettingsTab />}
+            {currentTab === 'settings' && (
+              <SettingsTab>
+                {/* 앱 설치 유도 섹션 */}
+                {installPrompt ? (
+                  <div className="mb-6 bg-[#0d59f2]/10 border border-[#0d59f2]/20 rounded-2xl p-5 fade-in">
+                    <div className="flex items-start gap-4">
+                      <div className="bg-[#0d59f2] p-3 rounded-xl shadow-lg shadow-[#0d59f2]/30">
+                        <span className="material-symbols-outlined text-white text-2xl">install_mobile</span>
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-bold text-lg mb-1">앱으로 설치하기</h3>
+                        <p className="text-sm text-slate-400 leading-relaxed mb-4">
+                          홈 화면에 추가하면 브라우저 없이 더 빠르고 쾌적하게 FocusGuard를 이용할 수 있습니다.
+                        </p>
+                        <button
+                          onClick={triggerInstall}
+                          className="w-full bg-[#0d59f2] hover:bg-[#0d59f2]/90 text-white font-bold py-3 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-2"
+                        >
+                          <span>지금 바로 설치</span>
+                          <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  /* 프롬프트가 없는 경우 (iOS 등) 안내 메시지 표시 */
+                  <div className="mb-6 bg-slate-800/20 border border-slate-800 rounded-2xl p-5">
+                    <div className="flex items-start gap-4">
+                      <div className="bg-slate-700 p-3 rounded-xl">
+                        <span className="material-symbols-outlined text-slate-300 text-2xl">info</span>
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-bold text-lg mb-1 text-slate-200">간편하게 설치하는 법</h3>
+                        <p className="text-sm text-slate-400 leading-relaxed">
+                          브라우저 메뉴에서 <span className="text-[#0d59f2] font-bold">"홈 화면에 추가"</span>를 누르시면 진짜 앱처럼 바탕화면에 아이콘이 생깁니다!
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </SettingsTab>
+            )}
           </>
         )}
       </main>
